@@ -6,17 +6,18 @@ from pprint import pprint
 import json
 
 
-
 def dumpContentJson(my_data, name):
     jsonString = json.dumps(my_data)
     jsonFile = open(name + ".json", "w")
     jsonFile.write(jsonString)
     jsonFile.close()
 
+
 def getListPage(min, max):
     cmsLinks = []
     cmsRange = list(range(min, max))
     urlList = []
+    count = 1
     baseUrl = "https://thanhnien.vn/cong-nghe-game/tin-tuc/?trang="
     for page_num in cmsRange:
         urlList.append(baseUrl + str(page_num))
@@ -27,11 +28,14 @@ def getListPage(min, max):
         for article in articles:
             articleLink = article.find("a", {"class": "story__title cms-link"})
             cmsLinks.append(articleLink.get_attribute_list("href")[0])
+        print("Get link: " + str(count) + "/" + str(max) + "\n")
+        count += 1
     return cmsLinks
 
 
 def getPageContent(cmsLinks):
     output = []
+    count = 1
     for url in cmsLinks:
         data = requests.get(url)
         html = BeautifulSoup(data.text, 'html.parser')
@@ -49,9 +53,12 @@ def getPageContent(cmsLinks):
             "title": title,
             "content": content
         })
+        print("Get data: " + str(count) + "/" + str(len(cmsLinks)) + "\n")
+        count += 1
     return output
 
-cmsLinks = getListPage(1, 100)
+
+cmsLinks = getListPage(1, 150)
 content = getPageContent(cmsLinks)
 print("Got " + str(len(content)) + "item")
 

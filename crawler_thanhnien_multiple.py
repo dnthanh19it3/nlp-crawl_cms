@@ -60,5 +60,4 @@ def getPageContent(cmsLinks):
 
 cmsLinks = getListPage(1, 2)
 content = getPageContent(cmsLinks)
-print("Got " + str(len(content)) + "item")
 dumpContentJson(content, "cms_content")
